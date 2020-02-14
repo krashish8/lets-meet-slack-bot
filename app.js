@@ -245,7 +245,7 @@ app.post('/add-member', function(request, result, next) {
 				}, token).then(result => {
 					axios.post(response_url, {'text': 'The member with email ' + email2 + ' has been successfully added.'}, {headers: headers})
 				},
-				error => {});
+				error => {console.log(error);});
 			});
 		},
 		error => {
