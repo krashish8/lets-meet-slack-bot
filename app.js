@@ -278,11 +278,9 @@ app.post('/add-task', function(request, result, next) {
 				post_backend_request('meets/' + meet_id + '/add-task/', {
 					"title": title,
 					"description": description,
-					"member": [
-					  	{
-					  		"email": email2
-					  	}
-				    ]
+					"member": {
+				  		"email": email2
+				  	}
 				}, token).then(result => {
 					axios.post(response_url, {'text': 'The member with email ' + email2 + ' has been assigned the task ' + title + '.'}, {headers: headers})
 				},
