@@ -106,7 +106,7 @@ app.post('/view-meet', function(request, result, next) {
 			meet_id = request.body.text;
 			get_backend_request('meets/'+ meet_id +'/', token).then(result => {
 				meet_id = result.data.id;
-				title = result.data.description;
+				title = result.data.title;
 				description = result.data.description;
 				minutes = result.data.minutes;
 				is_accepted = result.data.is_accepted;
@@ -118,6 +118,42 @@ app.post('/view-meet', function(request, result, next) {
 				axios.post(response_url, {'text': 'Meet details:\nId: ' + meet_id +'\nTitle: ' + title
 										   + '\nDescription: ' + description + '\nMinutes: ' + minutes + '\nFinalized: ' + is_accepted
 										   + '\nZoom Room: ' + zoom_link + '\nOrganizer: ' + organizer + '\nMembers: ' + members + '\nStart Date and Time: ' + date_and_time + '\nDuration: ' + duration + 'hrs'}, {headers: headers})
+			})
+		},
+		error => {
+			var headers = {
+				'Content-Type': 'application/json'
+			}
+			axios.post(response_url, {'text': 'You are not registered on Let\'s meet. Please visit https://lets-meet-web-app.herokuapp.com/ to register.'}, {headers: headers})
+		});
+	});
+
+	return result.status(200).end();
+})
+
+app.post('/view-meets', function(request, result, next) {
+	user_id = request.body.user_id;
+	response_url = request.body.response_url;
+	get_email_from_user_id(user_id).then(email => {
+		check_registered(email).then(token => {
+			var headers = {
+				'Content-Type': 'application/json'
+			}
+			get_backend_request('meets/', token).then(result => {
+				response = 'Meet Details:\n\n';
+				for (var i = 0; i < result.data.created_meets.length(); i++) {
+					meet_id = result.data.created_meets[i].id;
+					title = result.data.created_meets[i].title;
+					creator = true;
+					response += 'Id: ' + meet_id + '\nTitle: ' + title + '\nCreator: ' + creator + '\n\n';
+				}
+				for (var i = 0; i < result.data.participating_meets.length(); i++) {
+					meet_id = result.data.participating_meets[i].id;
+					title = result.data.participating_meets[i].title;
+					creator = false;
+					response += 'Id: ' + meet_id + '\nTitle: ' + title + '\nCreator: ' + creator + '\n\n';
+				}
+				axios.post(response_url, {'text': response}, {headers: headers})
 			})
 		},
 		error => {
