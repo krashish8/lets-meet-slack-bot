@@ -232,7 +232,7 @@ app.post('/add-member', function(request, result, next) {
 			meet_id = body.split(' ')[0];
 			tag = body.split(' ')[1];
 			user_id = (tag.split("<")[1]).split(">")[0].substr(1);
-			return result.status(200).json({'text': user_id});
+			axios.post(response_url, {'text': user_id}, {headers: headers});
 			// get_email_from_user_id(user_id).then(email => {
 			// 	check_registered(email).then(token => {
 			// 		var headers = {
