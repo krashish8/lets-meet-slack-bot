@@ -17,21 +17,6 @@ app.listen(port, function() {
 	console.log('Listening on port ' + port);
 });
 
-// getPolls() {
-//   var headers = {
-//       "Content-Type": "application/json",
-//       Authorization: "Token " + this.token
-//     };
-//   axios.get(`https://pollswrp.herokuapp.com/polls/`,{headers:headers}).then(result => {
-//     this.response = result.data;
-//     if (this.response.participated.length === 0 ) {
-//       this.participated_null = true;
-//     }
-//     if (this.response.created.length === 0 ) {
-//       this.created_null = true;
-//     }
-//   })
-// }
 
 function get_email_from_user_id(user_id) {
 	return axios.get(`https://slack.com/api/users.info?token=` + bot_token + `&user=` + user_id).then(result => {
@@ -59,6 +44,18 @@ function post_backend_request(url, data, token) {
 		"Authorization": "Token " + token
 	}
 	return axios.post('https://lets-meet-backend.herokuapp.com/' + url, data, {headers: headers}).then(result => {
+		return result;
+	},
+	error => {
+		throw error();
+	})
+}
+
+function get_backend_request(url, token) {
+	var headers = {
+		"Authorization": "Token " + token
+	}
+	return axios.get('https://lets-meet-backend.herokuapp.com/' + url, {headers: headers}).then(result => {
 		return result;
 	},
 	error => {
@@ -96,15 +93,40 @@ app.post('/propose-meet', function(request, result, next) {
 	});
 
 	return result.status(200).end();
+})
 
-	// var userName = request.body.user_name;
-	// var botPayload = {
-	// 	text: 'Hello ' + userName + ', welcome to this Test Bot' + request.body.user_id + request.body.text + ' ' + request.body.response_url
-	// };
+app.post('/view-meet', function(request, result, next) {
+	user_id = request.body.user_id;
+	response_url = request.body.response_url;
+	get_email_from_user_id(user_id).then(email => {
+		check_registered(email).then(token => {
+			var headers = {
+				'Content-Type': 'application/json'
+			}
+			meet_id = request.body.text;
+			get_backend_request('meets/'+ meet_id +'/', token).then(result => {
+				meet_id = result.data.id;
+				title = result.data.description;
+				description = result.data.description;
+				minutes = result.data.minutes;
+				is_accepted = result.data.is_accepted;
+				zoom_link = result.data.zoom_link;
+				organizer = result.data.creator;
+				members = result.data.members;
+				date_and_time = result.data.date_and_time;
+				duration = result.data.duration;
+				axios.post(response_url, {'text': 'Meet details:\nId: ' + meet_id +'\nTitle: ' + title
+										   + '\nDescription: ' + description + '\nMinutes: ' + minutes + '\nFinalized: ' + is_accepted
+										   + '\nZoom Room: ' + zoom_link + '\nOrganizer: ' + organizer + '\nMembers: ' + members + '\nStart Date and Time: ' + date_and_time + '\nDuration: ' + duration + 'hrs'}, {headers: headers})
+			})
+		},
+		error => {
+			var headers = {
+				'Content-Type': 'application/json'
+			}
+			axios.post(response_url, {'text': 'You are not registered on Let\'s meet. Please visit https://lets-meet-web-app.herokuapp.com/ to register.'}, {headers: headers})
+		});
+	});
 
-	// if (userName !== 'slackbot') {
-	// 	return result.status(200).json(botPayload);
-	// } else {
-	// 	return result.status(200).end();
-	// }
+	return result.status(200).end();
 })
