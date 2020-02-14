@@ -236,7 +236,7 @@ app.post('/add-member', function(request, result, next) {
 				post_backend_request('/meets/' + meet_id + '/add-members/', {
 				  "members": [
 				  	{
-				  		"email": email;
+				  		"email": email
 				  	}
 				  ]
 				}, token).then(result => {
