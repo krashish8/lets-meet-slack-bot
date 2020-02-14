@@ -33,13 +33,13 @@ app.listen(port, function() {
 //   })
 // }
 
-get_email_from_user_id(user_id) {
+function get_email_from_user_id(user_id) {
 	return axios.get(`https://slack.com/api/users.info?token=` + bot_token + `&user=` + user_id).then(result => {
 		return result.data.user.profile.email;
 	})
 }
 
-check_registered(email) {
+function check_registered(email) {
 	var headers = {
           "Authorization": "Token " + admin_token
     };
