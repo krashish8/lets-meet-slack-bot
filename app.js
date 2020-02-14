@@ -141,13 +141,13 @@ app.post('/view-meets', function(request, result, next) {
 			}
 			get_backend_request('meets/', token).then(result => {
 				response = 'Meet Details:\n\n';
-				for (var i = 0; i < result.data.created_meets.length(); i++) {
+				for (var i = 0; i < result.data.created_meets.length; i++) {
 					meet_id = result.data.created_meets[i].id;
 					title = result.data.created_meets[i].title;
 					creator = true;
 					response += 'Id: ' + meet_id + '\nTitle: ' + title + '\nCreator: ' + creator + '\n\n';
 				}
-				for (var i = 0; i < result.data.participating_meets.length(); i++) {
+				for (var i = 0; i < result.data.participating_meets.length; i++) {
 					meet_id = result.data.participating_meets[i].id;
 					title = result.data.participating_meets[i].title;
 					creator = false;
