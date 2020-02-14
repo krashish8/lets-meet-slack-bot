@@ -271,14 +271,14 @@ app.post('/add-task', function(request, result, next) {
 			console.log(title);
 			description = body[3];
 			console.log(description);
-			user_id2 = body[4].split("<")[1].split(">")[0].substr(1);
+			user_id2 = body[4].split("<")[1].split(">")[0].substr(1).split('|')[0];
 			console.log(user_id2);
 			get_email_from_user_id(user_id2).then(email2 => {
 				console.log(email2);
 				post_backend_request('meets/' + meet_id + '/add-task/', {
 					"title": title,
 					"description": description,
-					"members": [
+					"member": [
 					  	{
 					  		"email": email2
 					  	}
