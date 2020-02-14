@@ -130,3 +130,56 @@ app.post('/view-meet', function(request, result, next) {
 
 	return result.status(200).end();
 })
+
+app.post('/view-tasks', function(request, result, next) {
+	user_id = request.body.user_id;
+	response_url = request.body.response_url;
+	get_email_from_user_id(user_id).then(email => {
+		check_registered(email).then(token => {
+			var headers = {
+				'Content-Type': 'application/json'
+			}
+			get_backend_request('tasks/', token).then(result => {
+				task_id = result.data.id;
+				title = result.data.title;
+				description = result.data.description;
+				completed = result.data.completed;
+				meet_id = result.data.meetup
+				axios.post(response_url, {'text': 'Task details:\nId: ' + task_id +'\nTitle: ' + title
+										   + '\nDescription: ' + description + '\nCompleted: ' + completed + '\nMeet Id: ' + meet_id}, {headers: headers})
+			})
+		},
+		error => {
+			var headers = {
+				'Content-Type': 'application/json'
+			}
+			axios.post(response_url, {'text': 'You are not registered on Let\'s meet. Please visit https://lets-meet-web-app.herokuapp.com/ to register.'}, {headers: headers})
+		});
+	});
+
+	return result.status(200).end();
+})
+
+app.post('/complete-task', function(request, result, next) {
+	user_id = request.body.user_id;
+	response_url = request.body.response_url;
+	get_email_from_user_id(user_id).then(email => {
+		check_registered(email).then(token => {
+			var headers = {
+				'Content-Type': 'application/json'
+			}
+			task_id = request.body.text;
+			get_backend_request('tasks/'+ task_id +'/complete/', token).then(result => {
+				axios.post(response_url, {'text': 'Status of task set to completed successfully.'}, {headers: headers})
+			})
+		},
+		error => {
+			var headers = {
+				'Content-Type': 'application/json'
+			}
+			axios.post(response_url, {'text': 'You are not registered on Let\'s meet. Please visit https://lets-meet-web-app.herokuapp.com/ to register.'}, {headers: headers})
+		});
+	});
+
+	return result.status(200).end();
+})
