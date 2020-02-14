@@ -35,7 +35,7 @@ function check_registered(email) {
 		return token;
 	},
 	error => {
-		throw error();
+		throw error;
 	})
 }
 
@@ -47,7 +47,7 @@ function post_backend_request(url, data, token) {
 		return result;
 	},
 	error => {
-		throw error();
+		throw error;
 	})
 }
 
@@ -59,7 +59,7 @@ function get_backend_request(url, token) {
 		return result;
 	},
 	error => {
-		throw error();
+		throw error;
 	})
 }
 
