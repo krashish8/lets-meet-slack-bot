@@ -236,7 +236,7 @@ app.post('/add-member', function(request, result, next) {
 			console.log(user_id2);
 			get_email_from_user_id(user_id2).then(email2 => {
 				console.log(email2);
-				post_backend_request('/meets/' + meet_id + '/add-members/', {
+				post_backend_request('meets/' + meet_id + '/add-members/', {
 				  "members": [
 				  	{
 				  		"email": email2
