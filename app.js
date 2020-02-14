@@ -180,7 +180,8 @@ app.post('/view-tasks', function(request, result, next) {
 				title = result.data.title;
 				description = result.data.description;
 				completed = result.data.completed;
-				meet_id = result.data.meetup
+				meet_id = result.data.meetup;
+				console.log(result);
 				axios.post(response_url, {'text': 'Task details:\nId: ' + task_id +'\nTitle: ' + title
 										   + '\nDescription: ' + description + '\nCompleted: ' + completed + '\nMeet Id: ' + meet_id}, {headers: headers})
 			})
@@ -282,7 +283,7 @@ app.post('/add-task', function(request, result, next) {
 				  		"email": email2
 				  	}
 				}, token).then(result => {
-					axios.post(response_url, {'text': 'The member with email ' + email2 + ' has been assigned the task ' + title + '.'}, {headers: headers})
+					axios.post(response_url, {'text': 'The member with email ' + email2 + ' has been assigned the task \'' + title + '\'.'}, {headers: headers})
 				},
 				error => {});
 			});
