@@ -57,15 +57,22 @@ function check_registered(email) {
 app.post('/propose-meet', function(request, result, next) {
 	user_id = request.body.user_id;
 	response_url = request.body.response_url;
-	return result.status(200).json({'text': 'You are registered on Let\'s meet with token ' + result});
-	// get_email_from_user_id(user_id).then(email => {
-	// 	check_registered(email).then(token => {
-	// 		return response_url.status(200).json({'text': 'You are registered on Let\'s meet with token ' + token});
-	// 	},
-	// 	error => {
-	// 		return response_url.status(200).json({'text': 'You are not registered on Let\'s meet'});
-	// 	})
-	// })
+	get_email_from_user_id(user_id).then(email => {
+		check_registered(email).then(token => {
+			var headers = {
+				'Content-Type': 'application/json'
+			}
+			axios.post(response_url, {'text': 'You are registered on Let\'s meet with token ' + token}, {headers: headers})
+		},
+		error => {
+			var headers = {
+				'Content-Type': 'application/json'
+			}
+			axios.post(response_url, {'text': 'You are not registered on Let\'s meet'}, {headers: headers})
+		});
+	});
+
+	return result.status(200).json({'text': 'Processing'});
 
 	// var userName = request.body.user_name;
 	// var botPayload = {
