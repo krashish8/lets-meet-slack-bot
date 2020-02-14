@@ -236,12 +236,13 @@ app.post('/add-member', function(request, result, next) {
 				post_backend_request('/meets/' + meet_id + '/add-members/', {
 				  "members": [
 				  	{
-				  		"email": email
+				  		"email": email2
 				  	}
 				  ]
 				}, token).then(result => {
-					axios.post(response_url, {'text': 'The member with email ' + email + ' has been successfully added.'}, {headers: headers})
-				});
+					axios.post(response_url, {'text': 'The member with email ' + email2 + ' has been successfully added.'}, {headers: headers})
+				},
+				error => {});
 			});
 		},
 		error => {
