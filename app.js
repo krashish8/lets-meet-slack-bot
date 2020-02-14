@@ -176,14 +176,17 @@ app.post('/view-tasks', function(request, result, next) {
 				'Content-Type': 'application/json'
 			}
 			get_backend_request('tasks/', token).then(result => {
-				task_id = result.data.id;
-				title = result.data.title;
-				description = result.data.description;
-				completed = result.data.completed;
-				meet_id = result.data.meetup;
-				console.log(result);
-				axios.post(response_url, {'text': 'Task details:\nId: ' + task_id +'\nTitle: ' + title
-										   + '\nDescription: ' + description + '\nCompleted: ' + completed + '\nMeet Id: ' + meet_id}, {headers: headers})
+				response = 'Task Details:\n\n';
+				for (var i = 0; i < result.data.length; i++) {
+					task_id = result.data[i].id;
+					title = result.data[i].title;
+					description = result.data[i].description;
+					completed = result.data[i].completed;
+					meet_id = result.data[i].meetup;
+					response += 'Id: ' + task_id +'\nTitle: ' + title
+										   + '\nDescription: ' + description + '\nCompleted: ' + completed + '\nMeet Id: ' + meet_id + '\n\n';
+				}
+				axios.post(response_url, {'text': response}, {headers: headers})
 			})
 		},
 		error => {
