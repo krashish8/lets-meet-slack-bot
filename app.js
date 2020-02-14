@@ -54,6 +54,18 @@ function check_registered(email) {
 	})
 }
 
+function post_backend_request(url, data, token) {
+	var headers = {
+		"Authorization": "Token " + token
+	}
+	return axios.post('https://lets-meet-backend.herokuapp.com/' + url, data, {headers: headers}).then(result => {
+		return result;
+	},
+	error => {
+		throw error();
+	})
+}
+
 app.post('/propose-meet', function(request, result, next) {
 	user_id = request.body.user_id;
 	response_url = request.body.response_url;
@@ -62,17 +74,28 @@ app.post('/propose-meet', function(request, result, next) {
 			var headers = {
 				'Content-Type': 'application/json'
 			}
-			axios.post(response_url, {'text': 'You are registered on Let\'s meet with token ' + token}, {headers: headers})
+			s = request.body.text;
+			s = s.split("'");
+			title = s[1];
+			description = s[3];
+			post_backend_request('meets/propose/', {
+			  "title": title,
+			  "description": description,
+			  "is_slack": true
+			}, token).then(result => {
+				meet_id = result.data.id;
+				axios.post(response_url, {'text': 'The meet has been successfully created with id ' + meet_id + '. Please add some members to the meet.'}, {headers: headers})
+			})
 		},
 		error => {
 			var headers = {
 				'Content-Type': 'application/json'
 			}
-			axios.post(response_url, {'text': 'You are not registered on Let\'s meet'}, {headers: headers})
+			axios.post(response_url, {'text': 'You are not registered on Let\'s meet. Please visit https://lets-meet-web-app.herokuapp.com/ to register.'}, {headers: headers})
 		});
 	});
 
-	return result.status(200).json({'text': 'Processing'});
+	return result.status(200).end();
 
 	// var userName = request.body.user_name;
 	// var botPayload = {
