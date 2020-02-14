@@ -231,30 +231,18 @@ app.post('/add-member', function(request, result, next) {
 			body = request.body.text;
 			meet_id = body.split(' ')[0];
 			tag = body.split(' ')[1];
-			user_id = (tag.split("<")[1]).split(">")[0].substr(1);
-			axios.post(response_url, {'text': user_id}, {headers: headers});
-			// get_email_from_user_id(user_id).then(email => {
-			// 	check_registered(email).then(token => {
-			// 		var headers = {
-			// 			'Content-Type': 'application/json'
-			// 		}
-			// 		post_backend_request('/meets/' + meet_id + '/add-members/', {
-			// 		  "members": [
-			// 		  	{
-			// 		  		"email": email;
-			// 		  	}
-			// 		  ]
-			// 		}, token).then(result => {
-			// 			axios.post(response_url, {'text': 'The member with email ' + email + ' has been successfully added.'}, {headers: headers})
-			// 		})
-			// 	},
-			// 	error => {
-			// 		var headers = {
-			// 			'Content-Type': 'application/json'
-			// 		}
-			// 		axios.post(response_url, {'text': 'Member is not registered on Let\'s meet. Tell him to visit https://lets-meet-web-app.herokuapp.com/ to register.'}, {headers: headers})
-			// 	});
-			// });
+			user_id2 = (tag.split("<")[1]).split(">")[0].substr(1).split('|')[0];
+			get_email_from_user_id(user_id2).then(email2 => {
+				post_backend_request('/meets/' + meet_id + '/add-members/', {
+				  "members": [
+				  	{
+				  		"email": email;
+				  	}
+				  ]
+				}, token).then(result => {
+					axios.post(response_url, {'text': 'The member with email ' + email + ' has been successfully added.'}, {headers: headers})
+				});
+			});
 		},
 		error => {
 			var headers = {
