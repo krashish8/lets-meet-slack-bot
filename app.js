@@ -57,7 +57,7 @@ function check_registered(email) {
 app.post('/propose-meet', function(request, result, next) {
 	user_id = request.body.user_id;
 	response_url = request.body.response_url;
-	return result.status(200).json({'text': 'You are registered on Let\'s meet with token ' + response_url});
+	return result.status(200).json({'text': 'You are registered on Let\'s meet with token ' + result});
 	// get_email_from_user_id(user_id).then(email => {
 	// 	check_registered(email).then(token => {
 	// 		return response_url.status(200).json({'text': 'You are registered on Let\'s meet with token ' + token});
