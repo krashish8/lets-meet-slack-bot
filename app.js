@@ -230,9 +230,12 @@ app.post('/add-member', function(request, result, next) {
 			}
 			body = request.body.text;
 			meet_id = body.split(' ')[0];
+			console.log(meet_id);
 			tag = body.split(' ')[1];
 			user_id2 = (tag.split("<")[1]).split(">")[0].substr(1).split('|')[0];
+			console.log(user_id2);
 			get_email_from_user_id(user_id2).then(email2 => {
+				console.log(email2);
 				post_backend_request('/meets/' + meet_id + '/add-members/', {
 				  "members": [
 				  	{
