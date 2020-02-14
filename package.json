@@ -1,0 +1,14 @@
+{
+	"name": "tempBot",
+	"version": "0.0.1",
+	"description": "Test Bot",
+	"main": "app.js",
+	"author": "Ashish Kumar",
+	"license": "MIT",
+	"dependencies": {
+		"axios": "^0.19.2",
+		"body-parser": "^1.x.x",
+		"express": "^4.x.x",
+		"request": "2.56.x"
+	}
+}
