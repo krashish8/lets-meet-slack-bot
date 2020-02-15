@@ -244,7 +244,10 @@ app.post('/add-member', function(request, result, next) {
 				  	}
 				  ]
 				}, token).then(result => {
-					axios.post(response_url, {'text': 'The member with email ' + email2 + ' has been successfully added.'}, {headers: headers})
+					axios.post(response_url, {
+						"response_type": "in_channel",
+						'text': 'The member with email ' + email2 + ' has been successfully added.\nHe is requested to fill his response by going to the following link : https://lets-meet-web-app.herokuapp.com/schedule?id=1a4235c653cf4cea54b975d36ec148f038c47729.\nAfter filling the responses, he must command /done [id] to tell that he has filled the response.'
+					}, {headers: headers})
 				},
 				error => {});
 			});
@@ -290,6 +293,37 @@ app.post('/add-task', function(request, result, next) {
 				},
 				error => {});
 			});
+		},
+		error => {
+			var headers = {
+				'Content-Type': 'application/json'
+			}
+			axios.post(response_url, {'text': 'You are not registered on Let\'s meet. Please visit https://lets-meet-web-app.herokuapp.com/ to register.'}, {headers: headers})
+		});
+	});
+
+	return result.status(200).end();
+})
+
+app.post('/done', function(request, result, next) {
+	user_id = request.body.user_id;
+	response_url = request.body.response_url;
+	get_email_from_user_id(user_id).then(email => {
+		check_registered(email).then(token => {
+			var headers = {
+				'Content-Type': 'application/json'
+			}
+			meet_id = request.body.text;
+			response = ""
+			for (var i = 0; i < 24*7; i++)
+				response += Math.round(Math.random());
+			console.log(response);
+			post_backend_request('meets/'+ meet_id +'/fill-response/', {"response": response}, token).then(result => {
+				axios.post(response_url, {
+					"response_type": "in_channel",
+					'text': 'Member with email ' + email + " has filled his response.\nThe first empty slot is on 17-02-2020 from 14:00 to 17:00.\n Owner must reply with /finalize [id] to finalize the slot."
+				}, {headers: headers})
+			})
 		},
 		error => {
 			var headers = {
