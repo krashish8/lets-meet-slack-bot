@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 
 var app = express();
 var admin_token = 'ea45c0e724b76558e4a7743ee0ff10ebc1232d3a';
-var bot_token = 'xoxb-951825791648-942979843825-ne4cYH0eW5mi80R05W5QeMMT';
+var bot_token = 'xoxb-951825791648-942979843825-0OLZm5Yg4bN8LsYi6s4CHD44';
 var port = process.env.PORT || 1337;
 
 app.use(bodyParser.urlencoded({extended: true}));
