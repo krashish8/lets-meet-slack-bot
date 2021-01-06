@@ -6,7 +6,7 @@
 	"author": "Ashish Kumar",
 	"license": "MIT",
 	"dependencies": {
-		"axios": "^0.19.2",
+		"axios": "^0.21.1",
 		"body-parser": "^1.x.x",
 		"express": "^4.x.x",
 		"request": "2.88.x"
